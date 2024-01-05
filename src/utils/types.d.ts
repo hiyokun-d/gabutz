@@ -1,4 +1,4 @@
 type Message = {
-    Message: string | object
+    Message: any
     Who: "user" | "other"
 }
