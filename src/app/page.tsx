@@ -126,7 +126,7 @@ useEffect(() => {
 	return (
 		<>
 			<div className="message">
-				{messages.map((message): any => {
+				{messages.map((message: any): any => {
 					return <Bubbles Message={message.message} Who={message.from} />
 				})}
 			</div>
