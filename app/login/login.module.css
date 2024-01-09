@@ -1,0 +1,131 @@
+.background {
+	/* background: rgb(143,62,194);
+background: linear-gradient(90deg, rgba(143,62,194,1) 0%, rgba(224,189,219,1) 100%); */
+
+	background-image: url("/login-background(alt).jpg");
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.container {
+	max-width: 450px;
+	max-height: 700px;
+	width: 300px;
+	height: 500px;
+	background: transparent;
+	border: 2px solid white;
+	border-radius: 15px;
+	backdrop-filter: blur(10px) drop-shadow(4px 4px 10px blue);
+	-webkit-backdrop-filter: blur(10px);
+	box-shadow: 0px 10px 15px 5px rgb(65, 69, 75);
+	text-align: center;
+}
+
+.container > h1 {
+	font-size: 55px;
+	font-family: "Fraunces", serif;
+	text-transform: capitalize;
+	color: rgb(255, 255, 255);
+	text-shadow: 0px 3px 10px rgb(0, 0, 0);
+	line-height: 1.4;
+	font-weight: 700;
+	letter-spacing: 0.056em;
+}
+
+.container > p {
+	font-size: 21px;
+	line-height: 1;
+	font-family: Roboto, Times New Roman;
+	letter-spacing: 0.06em;
+	color: rgb(232, 232, 232);
+}
+
+.inputContainer {
+	margin-bottom: 20px;
+}
+
+.containerLine {
+	width: 100%;
+	height: 12px;
+	display: flex;
+	justify-content: center;
+	margin-bottom: 25px
+}
+.line {
+	width: 250px;
+	height: 2px;
+	background-color: rgba(195, 192, 192, 0.351);
+	margin-top: 10px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	-ms-border-radius: 5px;
+	-o-border-radius: 5px;
+	border-radius: 5px;
+}
+
+.inputContainer input {
+	margin: 5px;
+	width: 250px;
+	background: transparent;
+	border: 2px solid white;
+	border-radius: 10px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	-ms-border-radius: 10px;
+	-o-border-radius: 10px;
+	padding-left: 10px;
+	font-family: Roboto, sans-serif;
+	transition: width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+		font-size 1.2s cubic-bezier(1, 0, 0, 1);
+}
+
+.inputContainer input::placeholder {
+	color: white;
+	text-align: center;
+}
+
+.inputContainer input:focus {
+	transition: width 0.2s cubic-bezier(0.86, 0, 0.07, 1),
+		font-size 0.5s cubic-bezier(0.86, 0, 0.07, 1);
+	width: 260px;
+	font-size: 20px;
+}
+
+.inputContainer button {
+	position: relative;
+	color: black;
+	border: 1px solid white;
+	top: 10px;
+}
+
+.inputContainer button[type="submit"] {
+	width: 200px;
+	height: 50px;
+	border-radius: 15px;
+	background-color: rgba(255, 255, 255, 0.451);
+}
+
+
+.googles {
+	width: 200px;
+	height: 30px;
+	border-radius: 5px;
+	background-color: rgba(255, 255, 255, 0.451);
+}
+
+.login {
+	width: 130px;
+	height: 30px;
+	border-radius: 5px;
+	background-color: rgba(207, 225, 255, 0.557);
+}
