@@ -17,7 +17,7 @@ import styles from "./styles.module.css"
 import Image from "next/image";
 
 function Bubbles({ Message, Who }: Message): any {
-		const [currentUsr, setCurrentusr] = useState<object>({});
+		const [currentUsr, setCurrentusr] = useState<any>({});
 		const user = auth.currentUser;
 
 			useEffect(() => {
@@ -80,7 +80,7 @@ function InputMessage() {
 	const [textareaHeight, setTextareaHeight] = useState<number | null>(null);
 	const maxHeight = 200;
 	const [textInput, setTextInput] = useState<string>("");
-	const [currentUsr, setCurrentusr] = useState<object>({});
+	const [currentUsr, setCurrentusr] = useState<any>({});
 	const user = auth.currentUser;
 
 	useEffect(() => {
@@ -166,7 +166,6 @@ function InputMessage() {
 export default function Chat() {
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 	const [messages, setMessages] = useState<Array<object>>([]);
-	const [currentUsr, setCurrentusr] = useState<object>({});
 	const router = useRouter();
 	const user = auth.currentUser;
 
