@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useRouter } from "next/navigation";
 import { auth } from "../../firebase/firebase";
@@ -11,25 +11,6 @@ import {
 	getRedirectResult,
 } from "firebase/auth";
 import { useState } from "react";
-
-function submit(
-	event: React.FormEvent<HTMLFormElement>,
-	email: string,
-	password: string
-) {
-	event.preventDefault(); // Prevent form submission's default behavior
-	signInWithEmailAndPassword(auth, email, password)
-		.then((userCredential) => {
-			// Signed up
-			const user = userCredential.user;
-			console.log(user);
-		})
-		.catch((error) => {
-			const errorCode = error.code;
-			const errorMessage = error.message;
-			console.log(errorCode + " => " + errorMessage);
-		});
-}
 
 function google() {
 	const provider = new GoogleAuthProvider();
@@ -55,7 +36,7 @@ function google() {
 }
 
 function CreateAccount() {
-    const router = useRouter()
+	const router = useRouter();
 	const [email, setEmail] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
 
@@ -67,10 +48,9 @@ function CreateAccount() {
 		event.preventDefault(); // Prevent form submission's default behavior
 		createUserWithEmailAndPassword(auth, email, password)
 			.then((userCredential) => {
-
 				setEmail("");
 				setPassword("");
-                router.push("/makeUser")
+				router.push("/makeUser");
 			})
 			.catch((error) => {
 				const errorCode = error.code;
@@ -107,6 +87,27 @@ function CreateAccount() {
 function SignUp() {
 	const [email, setEmail] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
+	const router = useRouter();
+
+	function submit(
+		event: React.FormEvent<HTMLFormElement>,
+		email: string,
+		password: string
+	) {
+		event.preventDefault(); // Prevent form submission's default behavior
+		signInWithEmailAndPassword(auth, email, password)
+			.then((userCredential) => {
+				// User created
+				const user = userCredential.user;
+				router.push("/chat");
+				console.log(user);
+			})
+			.catch((error) => {
+				const errorCode = error.code;
+				const errorMessage = error.message;
+				console.log(errorCode + " => " + errorMessage);
+			});
+	}
 
 	return (
 		<form onSubmit={(e) => submit(e, email, password)}>
@@ -132,6 +133,7 @@ function SignUp() {
 		</form>
 	);
 }
+
 
 export default function Login() {
 	const [login, setLogin] = useState<boolean>(true);

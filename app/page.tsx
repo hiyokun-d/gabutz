@@ -10,12 +10,17 @@ export default function Home() {
 
 	useEffect(() => {
 		const unsubscribe = onAuthStateChanged(auth, (user) => {
-			if(!user) {
-				router.push("/login")
+			if (!user) {
+				router.push("/login");
 			} else {
-				router.push("/chat")
+				router.push("/chat");
 			}
 		});
+
+		return () => {
+			// Unsubscribe when the component unmounts
+			unsubscribe();
+		};
 	}, [router]);
 	return <h1>CHECK IF YOU HAVE AN ACCOUNT OR NOT!!</h1>;
 }

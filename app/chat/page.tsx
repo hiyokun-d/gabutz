@@ -1,25 +1,59 @@
 "use client";
-import { db } from "../../firebase/firebase";
+import { auth, db } from "../../firebase/firebase";
 import {
 	addDoc,
 	collection,
+	doc,
+	getDoc,
 	onSnapshot,
 	orderBy,
 	query,
 	serverTimestamp,
 } from "firebase/firestore";
 import gsap from "gsap";
+import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect, ChangeEvent } from "react";
+import styles from "./styles.module.css"
+import Image from "next/image";
 
 function Bubbles({ Message, Who }: Message): any {
+		const [currentUsr, setCurrentusr] = useState<object>({});
+		const user = auth.currentUser;
+
+			useEffect(() => {
+				const collectionRef = collection(db, "user");
+
+				const unsubscribe = onSnapshot(
+					query(collectionRef),
+					(querySnapshot) => {
+						querySnapshot.forEach((doc) => {
+							const userData = doc.data();
+
+							if (
+								userData.email === user?.email &&
+								userData.uid === user?.uid
+							) {
+								setCurrentusr(userData);
+							}
+						});
+					}
+				);
+
+				return () => {
+					unsubscribe();
+				};
+			}, [user]);
+
 	//* CHAT BUBBLES
+
+	 const senderName = currentUsr.username === Who ? "user" : Who;
 	return (
-		<div className="outline-3 outline-white mt-2 flex mb-10">
+		<div className="outline-3 outline-white mt-2 flex mb-14">
 			<p
 				className={`
         p-4 max-w-[80%] h-auto break-words
         ${
-					Who === "user"
+					senderName === "user"
 						? "bg-green-700 rounded-l-lg ml-auto"
 						: "bg-sky-500 rounded-r-lg mr-auto"
 				}
@@ -28,10 +62,10 @@ function Bubbles({ Message, Who }: Message): any {
 				{/* USERNAME */}
 				<span
 					className={`text-sm font-helvetica ${
-						Who === "user" ? "text-right block mb-1" : "text-left block mb-1"
+						senderName === "user" ? "text-right block mb-1" : "text-left block mb-1"
 					}`}
 				>
-					{Who === "user" ? "You" : Who}
+					{senderName}
 				</span>
 
 				{/* MESSAGE CONTENT */}
@@ -46,10 +80,30 @@ function InputMessage() {
 	const [textareaHeight, setTextareaHeight] = useState<number | null>(null);
 	const maxHeight = 200;
 	const [textInput, setTextInput] = useState<string>("");
+	const [currentUsr, setCurrentusr] = useState<object>({});
+	const user = auth.currentUser;
 
 	useEffect(() => {
 		adjustTextareaHeight();
 	}, [textInput, maxHeight]);
+
+	useEffect(() => {
+		const collectionRef = collection(db, "user");
+
+		const unsubscribe = onSnapshot(query(collectionRef), (querySnapshot) => {
+			querySnapshot.forEach((doc) => {
+				const userData = doc.data();
+
+				if (userData.email === user?.email && userData.uid === user?.uid) {
+					setCurrentusr(userData);
+				}
+			});
+		});
+
+		return () => {
+			unsubscribe();
+		};
+	}, [user]);
 
 	const adjustTextareaHeight = () => {
 		if (textareaRef.current) {
@@ -76,7 +130,7 @@ function InputMessage() {
 			if (textInput.trim() !== "") {
 				try {
 					await addDoc(collection(db, "messages"), {
-						from: "user",
+						from: currentUsr.username,
 						message: textInput.trim(),
 						createdAt: serverTimestamp(),
 					});
@@ -89,10 +143,11 @@ function InputMessage() {
 	};
 
 	return (
-		<div>
+		<div className={`${styles.inputContainer} w-full text-black fixed bottom-0`}>
+			<Image src={currentUsr?.profilePict} width={200} height={200} alt="yourPicture" priority placeholder="blur" blurDataURL="data:/fallback-profile.webp" />
 			<textarea
-				placeholder="Type your message here!"
-				className="w-full text-black fixed bottom-0 placeholder:text-center"
+				placeholder={`HI! ${currentUsr?.username}`}
+				className={`${styles.input} rounded-s-xl placeholder:text-center`}
 				ref={textareaRef}
 				value={textInput}
 				onChange={handleInputChange}
@@ -111,6 +166,9 @@ function InputMessage() {
 export default function Chat() {
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 	const [messages, setMessages] = useState<Array<object>>([]);
+	const [currentUsr, setCurrentusr] = useState<object>({});
+	const router = useRouter();
+	const user = auth.currentUser;
 
 	useEffect(() => {
 		const collectionRef = collection(db, "messages");
@@ -128,33 +186,39 @@ export default function Chat() {
 		);
 
 		return () => {
-			// Unsubscribe when the component unmounts
 			unsubscribe();
 		};
 	}, []);
 
-	// Function to scroll to the bottom of the messages container
-	const scrollToBottom = () => {
+	useEffect(() => {
 		if (messagesEndRef.current) {
 			messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
 		}
-	};
+	}, [messages]);
 
 	useEffect(() => {
-		scrollToBottom(); // Scroll to bottom on initial load
-	}, [messages]); // Trigger scroll when messages change
+		if (!user?.email) {
+			router.push("/");
+			return;
+		}
+	}, [user]);
 
 	return (
 		<>
-			<div className="message">
-				{messages.map((message: any): any => {
-					console.log(message);
-					return <Bubbles Message={message.message} Who={message.from} />;
-				})}
-			</div>
-
-			<div ref={messagesEndRef} />
-
+		<div className="message">
+					{messages.map((message: any): any => {
+						return (
+							<Bubbles
+								key={message.id}
+								Message={message.message}
+								Who={message.from}
+							/>
+						);
+					})}
+				</div>
+	
+				<div ref={messagesEndRef} />
+	
 			<InputMessage />
 		</>
 	);

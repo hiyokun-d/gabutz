@@ -17,16 +17,14 @@
 	padding: 25px;
 }
 
-.profilePict {
-	width: 150px;
-	height: 150px;
-	background-position: top;
-	background-size: cover;
-	background-repeat: no-repeat;
-	background-origin: border-box;
-	border-radius: 100%;
-	border: 1px solid rgb(255, 255, 255);
-	margin: 0 auto;
+.profilePict .pict {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    object-position: top;
+    border-radius: 100%;
+    border: 1px solid rgb(255, 255, 255);
+    margin: 0 auto;
     margin-bottom: 10px;
 }
 
@@ -64,4 +62,11 @@
     border: none;
     border-bottom: 1px solid white;
     background-color: rgba(0, 0, 0, 0.39);
+}
+
+.userContainer button {
+    background-color: rgba(0, 0, 0, 0.198);
+    width: 100px;
+    height: 40px;
+    border-radius: 5px;
 }

@@ -5,6 +5,7 @@ import axios from "axios";
 import { addDoc, collection } from "firebase/firestore";
 import { auth, db } from "@/firebase/firebase";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 function ProfilePict({ setImageUrl }: { setImageUrl: Function }) {
 	const [imageLocalUrl, setLocalImageUrl] = useState("");
@@ -23,21 +24,32 @@ function ProfilePict({ setImageUrl }: { setImageUrl: Function }) {
 		fetchImage();
 	}, []);
 
+	// 	style={{
+	// 	backgroundImage: `url(${
+	// 		imageLocalUrl ? imageLocalUrl : "/fallback-profile.webp"
+	// 	})`,
+	// }}
 	return (
-		<div
-			className={styles.profilePict}
-			style={{
-				backgroundImage: `url(${
-					imageLocalUrl ? imageLocalUrl : "/fallback-profile.webp"
-				})`,
-			}}
-		></div>
+		<div className={styles.profilePict}>
+			<Image
+				className={styles.pict}
+				src={imageLocalUrl}
+				alt="Your picture"
+				width={250}
+				height={250}
+				priority={true}
+				blurDataURL="data:/fallback-profile.webp" /* automatically provided */
+				placeholder="blur" // Optional blur-up while loading
+			/>
+		</div>
 	);
 }
 
 export default function makeUser() {
 	const [username, setUsername] = useState<string>("");
 	const [imageUrl, setImageUrl] = useState<string>("");
+    const router = useRouter();
+    
 	/* email
 "example@gmail.com"
 (string)
@@ -54,9 +66,8 @@ username
 "Jono"
 (string) */
 	async function submit() {
-        const user = auth.currentUser;
+		const user = auth.currentUser;
 		// console.log(username + " " + imageUrl + " " + user?.email);
-        const router = useRouter()
 		try {
 			if (username !== "") {
 				await addDoc(collection(db, "user"), {
@@ -65,8 +76,8 @@ username
 					profilePict: imageUrl,
 					username: username,
 				}).then(() => {
-                    router.push("/chat")
-                })
+					router.push("/chat");
+				});
 				setUsername("");
 			}
 		} catch (error) {
